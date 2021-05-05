@@ -1,0 +1,23 @@
+{
+    "typeName": "AWS::NimbleStudio::StreamingImage",
+    "language": "java",
+    "runtime": "java8",
+    "entrypoint": "software.amazon.nimblestudio.streamingimage.HandlerWrapper::handleRequest",
+    "testEntrypoint": "software.amazon.nimblestudio.streamingimage.HandlerWrapper::handleRequest",
+    "settings": {
+        "version": false,
+        "subparser_name": null,
+        "verbose": 0,
+        "force": false,
+        "type_name": null,
+        "namespace": [
+            "software",
+            "amazon",
+            "nimblestudio",
+            "streamingimage"
+        ],
+        "codegen_template_path": "guided_aws",
+        "protocolVersion": "2.0.0"
+    },
+    "executableEntrypoint": "software.amazon.nimblestudio.streamingimage.HandlerWrapperExecutable"
+}

@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  This CloudFormation template creates a role assumed by CloudFormation
+  during CRUDL operations to mutate resources on behalf of the customer.
+
+Resources:
+  ExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      MaxSessionDuration: 8400
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: resources.cloudformation.amazonaws.com
+            Action: sts:AssumeRole
+      Path: "/"
+      Policies:
+        - PolicyName: ResourceTypePolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                - "ec2:DeleteSnapshot"
+                - "ec2:DeregisterImage"
+                - "ec2:DescribeImages"
+                - "ec2:DescribeSnapshots"
+                - "ec2:ModifyImageAttribute"
+                - "ec2:ModifyInstanceAttribute"
+                - "ec2:ModifySnapshotAttribute"
+                - "ec2:RegisterImage"
+                - "kms:CreateGrant"
+                - "kms:Decrypt"
+                - "kms:Encrypt"
+                - "kms:GenerateDataKey"
+                - "kms:ListGrants"
+                - "kms:RetireGrant"
+                - "nimble:CreateStreamingImage"
+                - "nimble:DeleteStreamingImage"
+                - "nimble:GetStreamingImage"
+                - "nimble:ListStreamingImages"
+                - "nimble:TagResource"
+                - "nimble:UntagResource"
+                - "nimble:UpdateStreamingImage"
+                Resource: "*"
+Outputs:
+  ExecutionRoleArn:
+    Value:
+      Fn::GetAtt: ExecutionRole.Arn

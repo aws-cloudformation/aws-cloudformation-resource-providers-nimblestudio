@@ -1,0 +1,23 @@
+{
+    "typeName": "AWS::NimbleStudio::LaunchProfile",
+    "language": "java",
+    "runtime": "java8",
+    "entrypoint": "software.amazon.nimblestudio.launchprofile.HandlerWrapper::handleRequest",
+    "testEntrypoint": "software.amazon.nimblestudio.launchprofile.HandlerWrapper::handleRequest",
+    "settings": {
+        "version": false,
+        "subparser_name": null,
+        "verbose": 0,
+        "force": false,
+        "type_name": null,
+        "namespace": [
+            "software",
+            "amazon",
+            "nimblestudio",
+            "launchprofile"
+        ],
+        "codegen_template_path": "default",
+        "protocolVersion": "2.0.0"
+    },
+    "executableEntrypoint": "software.amazon.nimblestudio.launchprofile.HandlerWrapperExecutable"
+}
