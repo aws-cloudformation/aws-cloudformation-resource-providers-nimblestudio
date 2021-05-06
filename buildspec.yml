@@ -5,6 +5,7 @@ phases:
         java: openjdk8
         python: 3.7
     commands:
+      -  pip install pyyaml --upgrade
       -  pip install --upgrade 'six==1.16.0'
       -  pip install pre-commit cloudformation-cli-java-plugin
   build:
@@ -18,7 +19,7 @@ phases:
           echo "Folders to build: $dirs"
           for directory in $dirs; do
             cd "$directory"
-            mvn -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -B clean verify --no-transfer-progress -e
+            mvn -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -B clean verify --no-transfer-progress
             if [ "$?" -ne 0 ] ; then
                 echo "Build failed!"
                 exit 1
@@ -29,3 +30,8 @@ phases:
         else
           echo "$CODEBUILD_SRC_DIR is empty"
         fi
+    finally:
+      - cat "$CODEBUILD_SRC_DIR/aws-nimblestudio-launchprofile/rpdk.log"
+      - cat "$CODEBUILD_SRC_DIR/aws-nimblestudio-streamingimage/rpdk.log"
+      - cat "$CODEBUILD_SRC_DIR/aws-nimblestudio-studio/rpdk.log"
+      - cat "$CODEBUILD_SRC_DIR/aws-nimblestudio-studiocomponent/rpdk.log"

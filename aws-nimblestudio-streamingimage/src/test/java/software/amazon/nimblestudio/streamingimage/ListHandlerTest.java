@@ -20,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -57,10 +58,10 @@ public class ListHandlerTest extends AbstractTestBase {
 
         // Mock the response
         Mockito.doReturn(ListStreamingImagesResponse.builder()
-                .streamingImages(Arrays.asList(
-                    Utils.generateStreamingImage("streamingImage1", StreamingImageState.READY),
-                    Utils.generateStreamingImage("streamingImage2", StreamingImageState.CREATE_IN_PROGRESS)
-                )).build())
+            .streamingImages(Arrays.asList(
+                Utils.generateStreamingImage("streamingImage1", StreamingImageState.READY),
+                Utils.generateStreamingImage("streamingImage2", StreamingImageState.CREATE_IN_PROGRESS)
+            )).build())
             .when(proxyClient).injectCredentialsAndInvokeV2(any(ListStreamingImagesRequest.class), any());
 
         // Make the LIST request
@@ -79,6 +80,28 @@ public class ListHandlerTest extends AbstractTestBase {
             Utils.generateResourceModel("streamingImage2"));
         assertThat(response.getMessage()).isNull();
         assertThat(response.getErrorCode()).isNull();
+    }
+
+    @Test
+    public void handleRequest_IgnoreState() {
+        // Mock request
+        final ResourceHandlerRequest<ResourceModel> request = ResourceHandlerRequest.<ResourceModel>builder()
+            .desiredResourceState(ResourceModel.builder()
+                .studioId("studioId")
+                .build())
+            .build();
+
+        // Mock the response
+        Mockito.doReturn(ListStreamingImagesResponse.builder()
+            .streamingImages(
+                Collections.singletonList(Utils.generateStreamingImage("streamingImage1", StreamingImageState.DELETED))).build())
+            .when(proxyClient).injectCredentialsAndInvokeV2(any(ListStreamingImagesRequest.class), any());
+
+        // Make the LIST request
+        final ProgressEvent<ResourceModel, CallbackContext> response = new ListHandler()
+            .handleRequest(proxy, request, new CallbackContext(), proxyClient, logger);
+
+        assertThat(response.getResourceModels()).hasSize(0);
     }
 
     static Stream<Arguments> testParamsForException() {

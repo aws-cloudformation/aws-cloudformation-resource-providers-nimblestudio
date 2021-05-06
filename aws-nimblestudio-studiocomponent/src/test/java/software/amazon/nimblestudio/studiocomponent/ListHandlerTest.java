@@ -7,7 +7,9 @@ import software.amazon.awssdk.services.nimble.NimbleClient;
 import software.amazon.awssdk.services.nimble.model.LaunchProfilePlatform;
 import software.amazon.awssdk.services.nimble.model.ListStudioComponentsRequest;
 import software.amazon.awssdk.services.nimble.model.ListStudioComponentsResponse;
+import software.amazon.awssdk.services.nimble.model.StudioComponent;
 import software.amazon.awssdk.services.nimble.model.StudioComponentInitializationScriptRunContext;
+import software.amazon.awssdk.services.nimble.model.StudioComponentState;
 import software.amazon.awssdk.services.nimble.model.StudioComponentSubtype;
 import software.amazon.awssdk.services.nimble.model.StudioComponentType;
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
@@ -126,15 +128,7 @@ public class ListHandlerTest extends AbstractTestBase {
         .tags(Utils.generateTags())
         .build();
 
-    private ListStudioComponentsResponse generateListStudioComponentsResult() {
-        return ListStudioComponentsResponse.builder()
-            .studioComponents(Utils.getStudioComponents())
-            .nextToken("1231j091j23")
-            .build();
-    }
-
     private ResourceHandlerRequest<ResourceModel> generateListHandlerRequest() {
-
         final ResourceModel model = ResourceModel.builder().build();
         return ResourceHandlerRequest.<ResourceModel>builder().desiredResourceState(model)
             .nextToken("09018023nj").build();
@@ -142,7 +136,11 @@ public class ListHandlerTest extends AbstractTestBase {
 
     @Test
     public void handleRequest_SimpleSuccess() {
-        Mockito.doReturn(generateListStudioComponentsResult()).when(proxyClient)
+        ListStudioComponentsResponse listStudioComponentsResponse = ListStudioComponentsResponse.builder()
+            .studioComponents(Utils.getStudioComponents())
+            .nextToken("1231j091j23")
+            .build();
+        Mockito.doReturn(listStudioComponentsResponse).when(proxyClient)
             .injectCredentialsAndInvokeV2(any(ListStudioComponentsRequest.class), any());
 
         final ListHandler handler = new ListHandler();
@@ -165,6 +163,28 @@ public class ListHandlerTest extends AbstractTestBase {
         ));
         assertThat(response.getMessage()).isNull();
         assertThat(response.getErrorCode()).isNull();
+    }
+
+    @Test
+    public void handleRequest_IgnoreStates() {
+        ListStudioComponentsResponse listStudioComponentsResponse = ListStudioComponentsResponse.builder()
+            .studioComponents(Arrays.asList(
+                StudioComponent.builder().state(StudioComponentState.DELETED).build(),
+                StudioComponent.builder().state(StudioComponentState.CREATE_FAILED).build()))
+            .nextToken("1231j091j23")
+            .build();
+
+        Mockito.doReturn(listStudioComponentsResponse).when(proxyClient)
+            .injectCredentialsAndInvokeV2(any(ListStudioComponentsRequest.class), any());
+
+        final ListHandler handler = new ListHandler();
+
+        final ResourceHandlerRequest<ResourceModel> request = generateListHandlerRequest();
+
+        final ProgressEvent<ResourceModel, CallbackContext> response = handler
+            .handleRequest(proxy, request, new CallbackContext(), proxyClient, logger);
+
+        assertThat(response.getResourceModels().size()).isEqualTo(0);
     }
 
     @ParameterizedTest

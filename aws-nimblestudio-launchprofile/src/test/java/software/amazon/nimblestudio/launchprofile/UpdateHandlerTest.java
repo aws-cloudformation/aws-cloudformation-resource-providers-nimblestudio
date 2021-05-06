@@ -24,6 +24,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.Mockito;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 
 import java.time.Instant;
@@ -126,6 +128,38 @@ public class UpdateHandlerTest extends AbstractTestBase {
         assertThat(response.getResourceModels()).isNull();
         assertThat(response.getMessage()).isNull();
         assertThat(response.getErrorCode()).isNull();
+    }
+
+    @Test
+    public void handleRequest_SimpleSuccess_EmptyFields() {
+        Mockito.doReturn(Utils.generateGetLaunchProfileResponse(LaunchProfileState.READY)).when(proxyClient)
+            .injectCredentialsAndInvokeV2(any(GetLaunchProfileRequest.class), any());
+
+        Mockito.doReturn(generateUpdateLaunchProfileResult()).when(proxyClient)
+            .injectCredentialsAndInvokeV2(any(UpdateLaunchProfileRequest.class), any());
+
+            ResourceHandlerRequest<ResourceModel> request = ResourceHandlerRequest.<ResourceModel>builder()
+                .desiredResourceState(ResourceModel.builder()
+                    .studioId("studioId")
+                    .launchProfileId("launchProfileId")
+                    .build())
+                .clientRequestToken("clientToken")
+                .build();
+
+        final ProgressEvent<ResourceModel, CallbackContext> response = handler
+            .handleRequest(proxy, request, new CallbackContext(), proxyClient, logger);
+
+        // The API will be called 4 times (read, update, read, read). Capture the calls and then inspect the update request.
+        ArgumentCaptor<UpdateLaunchProfileRequest> argumentCaptor = ArgumentCaptor.forClass(UpdateLaunchProfileRequest.class);
+        Mockito.verify(proxyClient, Mockito.times(4)).injectCredentialsAndInvokeV2(argumentCaptor.capture(), Mockito.any());
+        UpdateLaunchProfileRequest updateLaunchProfileRequest = argumentCaptor.getAllValues().get(1);
+
+        System.out.println(updateLaunchProfileRequest);
+        assertThat(updateLaunchProfileRequest.description()).isNull();
+        assertThat(updateLaunchProfileRequest.name()).isNull();
+        assertThat(updateLaunchProfileRequest.streamConfiguration()).isNull();
+        assertThat(updateLaunchProfileRequest.hasLaunchProfileProtocolVersions()).isEqualTo(false);
+        assertThat(updateLaunchProfileRequest.hasStudioComponentIds()).isEqualTo(false);
     }
 
     @Test

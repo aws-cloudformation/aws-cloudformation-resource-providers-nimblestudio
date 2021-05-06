@@ -98,6 +98,10 @@ public class CreateHandlerTest extends AbstractTestBase {
                 .displayName("CreateStudioDisplayName")
                 .studioName("CreateStudioName")
                 .userRoleArn("uGIAMARN")
+                .studioEncryptionConfiguration(software.amazon.nimblestudio.studio.StudioEncryptionConfiguration.builder()
+                    .keyArn("testKeyArn")
+                    .keyType(StudioEncryptionConfigurationKeyType.AWS_OWNED_KEY.toString())
+                    .build())
                 .tags(Utils.generateTags())
                 .build())
             .clientRequestToken("clientToken")
@@ -197,7 +201,22 @@ public class CreateHandlerTest extends AbstractTestBase {
         assertThat(response.getErrorCode()).isNull();
     }
 
-    @ParameterizedTest
+//    @Test
+//    public void handleRequest_CreateSuccess_BlankEncruption() {
+//        Mockito.when(proxyClient.injectCredentialsAndInvokeV2(any(GetStudioRequest.class), any()))
+//            .thenReturn(Utils.generateReadStudioCreatingResult()).thenReturn(Utils.generateReadStudioCreatingResult())
+//            .thenReturn(Utils.generateReadStudioReadyResult());
+//
+//        Mockito.doReturn(generateCreateStudioResult()).when(proxyClient)
+//            .injectCredentialsAndInvokeV2(any(CreateStudioRequest.class), any());
+//
+//        final ProgressEvent<ResourceModel, CallbackContext> response = handler
+//            .handleRequest(proxy, generateCreateHandlerRequest(), new CallbackContext(), proxyClient, logger);
+//
+//        assertThat(response.getResourceModel().studioEncryptionConfiguration()).isEqualTo(null);
+//    }
+
+        @ParameterizedTest
     @MethodSource("testParamsForException")
     public void handleRequest_Failed_Exception(final Class<Throwable> thrownException,
                                                final Class<Throwable> expectedException) {

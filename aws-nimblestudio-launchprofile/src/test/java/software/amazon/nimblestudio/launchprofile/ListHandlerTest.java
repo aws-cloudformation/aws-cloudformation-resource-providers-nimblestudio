@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 import software.amazon.awssdk.services.nimble.NimbleClient;
 import software.amazon.awssdk.services.nimble.model.LaunchProfileState;
 import software.amazon.awssdk.services.nimble.model.ListLaunchProfilesRequest;
+import software.amazon.awssdk.services.nimble.model.ListLaunchProfilesResponse;
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.OperationStatus;
 import software.amazon.cloudformation.proxy.ProgressEvent;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -82,6 +84,32 @@ public class ListHandlerTest extends AbstractTestBase {
         );
         assertThat(response.getMessage()).isNull();
         assertThat(response.getErrorCode()).isNull();
+    }
+
+    @Test
+    public void handleRequest_IgnoreStates() {
+        // Mock the response
+        ListLaunchProfilesResponse listLaunchProfilesResponse = ListLaunchProfilesResponse.builder()
+            .launchProfiles(Arrays.asList(
+                Utils.generateLaunchProfile(LaunchProfileState.CREATE_FAILED),
+                Utils.generateLaunchProfile(LaunchProfileState.DELETED)))
+            .build();
+        Mockito.doReturn(listLaunchProfilesResponse).when(proxyClient)
+            .injectCredentialsAndInvokeV2(any(ListLaunchProfilesRequest.class), any());
+
+        // Mock request
+        final ResourceModel model = ResourceModel.builder()
+            .studioId(DEFAULT_STUDIO_ID)
+            .build();
+        final ResourceHandlerRequest<ResourceModel> request = ResourceHandlerRequest.<ResourceModel>builder()
+            .desiredResourceState(model)
+            .build();
+
+        // Make the LIST request
+        final ProgressEvent<ResourceModel, CallbackContext> response = handler
+            .handleRequest(proxy, request, new CallbackContext(), proxyClient, logger);
+
+        assertThat(response.getResourceModels().size()).isEqualTo(0);
     }
 
     @ParameterizedTest

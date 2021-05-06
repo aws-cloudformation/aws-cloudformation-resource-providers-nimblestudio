@@ -5,6 +5,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import software.amazon.awssdk.services.nimble.NimbleClient;
 import software.amazon.awssdk.services.nimble.model.GetStudioRequest;
+import software.amazon.awssdk.services.nimble.model.GetStudioResponse;
 import software.amazon.awssdk.services.nimble.model.Studio;
 import software.amazon.awssdk.services.nimble.model.StudioEncryptionConfiguration;
 import software.amazon.awssdk.services.nimble.model.StudioEncryptionConfigurationKeyType;
@@ -101,9 +102,7 @@ public class UpdateHandlerTest extends AbstractTestBase {
     private ResourceHandlerRequest<ResourceModel> generateUpdateHandlerBlankRequest() {
         return ResourceHandlerRequest.<ResourceModel>builder()
             .desiredResourceState(ResourceModel.builder()
-                .adminRoleArn(" ")
                 .studioId("idUpdated")
-                .userRoleArn("uGIAMARN")
                 .tags(Utils.generateTags())
                 .build())
             .build();
@@ -192,7 +191,27 @@ public class UpdateHandlerTest extends AbstractTestBase {
 
     @Test
     public void handleRequest_UpdateSuccess_BlankRequest() {
-        Mockito.doReturn(Utils.generateReadStudioUpdatedResult()).when(proxyClient)
+        GetStudioResponse getStudioResponse = GetStudioResponse.builder()
+            .studio(Studio.builder()
+                .createdAt(timestamp)
+                .displayName("UpdateStudioDisplayName")
+                .homeRegion("us-west-2")
+                .ssoClientId("SsoClientId")
+                .state(StudioState.READY)
+                .statusCode("STUDIO_READY")
+                .statusMessage("Update Complete")
+                .studioId("id")
+                .studioName("UpdateStudioName")
+                .studioUrl("studiourl")
+                .updatedAt(timestamp)
+                .tags(Utils.generateTags())
+                .studioEncryptionConfiguration(StudioEncryptionConfiguration.builder()
+                    .keyType(StudioEncryptionConfigurationKeyType.AWS_OWNED_KEY.toString())
+                    .build())
+                .build())
+            .build();
+
+        Mockito.doReturn(getStudioResponse).when(proxyClient)
             .injectCredentialsAndInvokeV2(any(GetStudioRequest.class), any());
         Mockito.doReturn(generateUpdateStudioResult()).when(proxyClient)
             .injectCredentialsAndInvokeV2(any(UpdateStudioRequest.class), any());
@@ -201,17 +220,14 @@ public class UpdateHandlerTest extends AbstractTestBase {
             .handleRequest(proxy, generateUpdateHandlerBlankRequest(), new CallbackContext(), proxyClient, logger);
 
         final ResourceModel expectedResponseModel = ResourceModel.builder()
-            .adminRoleArn("aGIAMARN")
             .displayName("UpdateStudioDisplayName")
             .homeRegion("us-west-2")
             .ssoClientId("SsoClientId")
             .studioId("id")
             .studioName("UpdateStudioName")
             .studioUrl("studiourl")
-            .userRoleArn("uGIAMARN")
             .tags(Utils.generateTags())
             .studioEncryptionConfiguration(software.amazon.nimblestudio.studio.StudioEncryptionConfiguration.builder()
-                .keyArn("testKeyArn")
                 .keyType(StudioEncryptionConfigurationKeyType.AWS_OWNED_KEY.toString())
                 .build())
             .build();

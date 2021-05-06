@@ -277,6 +277,31 @@ public class UpdateHandlerTest extends AbstractTestBase {
     }
 
     @Test
+    public void handleRequest_UpdateSuccess_BlankConfiguration() {
+        Mockito.doReturn(Utils.generateReadStudioComponentUpdatedResult()).when(proxyClient)
+            .injectCredentialsAndInvokeV2(any(GetStudioComponentRequest.class), any());
+
+        Mockito.doReturn(generateUpdateStudioComponentResult()).when(proxyClient)
+            .injectCredentialsAndInvokeV2(any(UpdateStudioComponentRequest.class), any());
+
+        final ResourceHandlerRequest<ResourceModel> request = generateUpdateHandlerBlankRequest();
+        request.getDesiredResourceState().setConfiguration(
+            software.amazon.nimblestudio.studiocomponent.StudioComponentConfiguration.builder().build());
+
+        final ProgressEvent<ResourceModel, CallbackContext> response = handler
+            .handleRequest(proxy, request, new CallbackContext(), proxyClient, logger);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isEqualTo(OperationStatus.SUCCESS);
+        assertThat(response.getCallbackContext()).isNull();
+        assertThat(response.getCallbackDelaySeconds()).isEqualTo(0);
+        assertThat(response.getResourceModel()).isEqualTo(generateExpectedResponse());
+        assertThat(response.getResourceModels()).isNull();
+        assertThat(response.getMessage()).isNull();
+        assertThat(response.getErrorCode()).isNull();
+    }
+
+    @Test
     public void handleRequest_AlreadyDeleted_Exception() {
         Mockito.when(proxyClient.injectCredentialsAndInvokeV2(any(GetStudioComponentRequest.class), any()))
             .thenReturn(Utils.generateReadStudioComponentDeletedResult());
