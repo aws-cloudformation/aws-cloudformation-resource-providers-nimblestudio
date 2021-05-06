@@ -78,7 +78,7 @@ public class DeleteHandlerTest extends AbstractTestBase {
                 .injectCredentialsAndInvokeV2(Mockito.any(GetStreamingImageRequest.class), Mockito.any());
         Mockito.verify(proxyClient, Mockito.times(1))
                 .injectCredentialsAndInvokeV2(Mockito.any(DeleteStreamingImageRequest.class), Mockito.any());
-        System.out.println(response);
+
         assertThat(response).isNotNull();
         assertThat(response.getStatus()).isEqualTo(OperationStatus.SUCCESS);
         assertThat(response.getCallbackContext()).isNull();

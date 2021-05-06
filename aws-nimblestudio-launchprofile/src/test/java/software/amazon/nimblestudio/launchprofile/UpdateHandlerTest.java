@@ -154,7 +154,6 @@ public class UpdateHandlerTest extends AbstractTestBase {
         Mockito.verify(proxyClient, Mockito.times(4)).injectCredentialsAndInvokeV2(argumentCaptor.capture(), Mockito.any());
         UpdateLaunchProfileRequest updateLaunchProfileRequest = argumentCaptor.getAllValues().get(1);
 
-        System.out.println(updateLaunchProfileRequest);
         assertThat(updateLaunchProfileRequest.description()).isNull();
         assertThat(updateLaunchProfileRequest.name()).isNull();
         assertThat(updateLaunchProfileRequest.streamConfiguration()).isNull();
