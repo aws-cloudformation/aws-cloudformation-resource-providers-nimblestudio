@@ -1,0 +1,23 @@
+{
+    "typeName": "AWS::NimbleStudio::StudioComponent",
+    "language": "java",
+    "runtime": "java8",
+    "entrypoint": "software.amazon.nimblestudio.studiocomponent.HandlerWrapper::handleRequest",
+    "testEntrypoint": "software.amazon.nimblestudio.studiocomponent.HandlerWrapper::handleRequest",
+    "settings": {
+        "version": false,
+        "subparser_name": null,
+        "verbose": 0,
+        "force": false,
+        "type_name": null,
+        "namespace": [
+            "software",
+            "amazon",
+            "nimblestudio",
+            "studiocomponent"
+        ],
+        "codegen_template_path": "default",
+        "protocolVersion": "2.0.0"
+    },
+    "executableEntrypoint": "software.amazon.nimblestudio.studiocomponent.HandlerWrapperExecutable"
+}
