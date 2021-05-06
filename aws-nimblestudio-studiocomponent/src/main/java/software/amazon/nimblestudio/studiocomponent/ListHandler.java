@@ -16,6 +16,7 @@ import software.amazon.awssdk.services.nimble.model.StudioComponent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -54,7 +55,13 @@ public class ListHandler extends BaseHandlerStd {
                         .description(studioComponent.description())
                         .initializationScripts(Translator.toModelStudioComponentInitializationScripts(studioComponent))
                         .name(studioComponent.name())
-                        .scriptParameters(new ArrayList(studioComponent.scriptParameters()))
+                        .scriptParameters(studioComponent.scriptParameters().stream()
+                            .map(param ->
+                                ScriptParameterKeyValue.builder()
+                                    .key(param.key())
+                                    .value(param.value())
+                                    .build())
+                            .collect(Collectors.toList()))
                         .ec2SecurityGroupIds(studioComponent.ec2SecurityGroupIds())
                         .studioComponentId(studioComponent.studioComponentId())
                         .studioId(request.getDesiredResourceState().getStudioId())

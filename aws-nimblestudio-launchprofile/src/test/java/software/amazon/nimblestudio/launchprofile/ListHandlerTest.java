@@ -1,13 +1,9 @@
 package software.amazon.nimblestudio.launchprofile;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.contrib.java.lang.system.EnvironmentVariables;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import software.amazon.awssdk.services.nimble.NimbleClient;
 import software.amazon.awssdk.services.nimble.model.LaunchProfileState;
 import software.amazon.awssdk.services.nimble.model.ListLaunchProfilesRequest;
@@ -44,19 +40,10 @@ public class ListHandlerTest extends AbstractTestBase {
     @Mock
     private ProxyClient<NimbleClient> proxyClient;
 
-    @Rule
-    private final EnvironmentVariables environmentVariables = new EnvironmentVariables();
-
     private ListHandler handler;
-
-    @Before
-    public void initMocks() {
-        MockitoAnnotations.initMocks(this);
-    }
 
     @BeforeEach
     public void setup() {
-        environmentVariables.set("AWS_REGION", "us-west-2");
         proxy = getAmazonWebServicesClientProxy();
         nimbleClient = mock(NimbleClient.class);
         when(proxyClient.client()).thenReturn(nimbleClient);

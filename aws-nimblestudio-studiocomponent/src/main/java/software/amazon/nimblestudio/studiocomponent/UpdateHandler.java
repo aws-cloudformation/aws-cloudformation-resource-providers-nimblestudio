@@ -23,7 +23,6 @@ import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
 
 import software.amazon.awssdk.utils.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -211,9 +210,7 @@ public class UpdateHandler extends BaseHandlerStd {
         }
 
         if (model.getEc2SecurityGroupIds() != null) {
-            updateStudioComponentRequestBuilder.ec2SecurityGroupIds(
-                new ArrayList(model.getEc2SecurityGroupIds())
-            );
+            updateStudioComponentRequestBuilder.ec2SecurityGroupIds(model.getEc2SecurityGroupIds());
         }
 
         if (!StringUtils.isEmpty(model.getType())) {

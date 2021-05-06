@@ -61,11 +61,11 @@
             <version>2.26.0</version>
             <scope>test</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-nimblestudio -->
+        <!-- https://mvnrepository.com/artifact/software.amazon.awssdk/nimble -->
         <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-nimblestudio</artifactId>
-            <version>1.11.1009</version>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>nimble</artifactId>
+            <version>2.16.56</version>
         </dependency>
     </dependencies>
 

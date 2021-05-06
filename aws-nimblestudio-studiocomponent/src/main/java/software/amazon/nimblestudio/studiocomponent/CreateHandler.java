@@ -21,7 +21,6 @@ import software.amazon.cloudformation.proxy.ProgressEvent;
 import software.amazon.cloudformation.proxy.ProxyClient;
 import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -199,9 +198,7 @@ public class CreateHandler extends BaseHandlerStd {
         }
 
         if (model.getEc2SecurityGroupIds() != null) {
-            createStudioComponentRequestBuilder.ec2SecurityGroupIds(
-                new ArrayList(model.getEc2SecurityGroupIds())
-            );
+            createStudioComponentRequestBuilder.ec2SecurityGroupIds(model.getEc2SecurityGroupIds());
         }
 
         if (!StringUtils.isEmpty(model.getSubtype())) {

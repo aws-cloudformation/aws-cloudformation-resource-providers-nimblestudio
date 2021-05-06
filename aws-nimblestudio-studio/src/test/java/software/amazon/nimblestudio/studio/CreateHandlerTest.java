@@ -16,15 +16,12 @@ import software.amazon.cloudformation.proxy.ProgressEvent;
 import software.amazon.cloudformation.proxy.ProxyClient;
 import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
 
-import org.junit.Before;
-import org.junit.contrib.java.lang.system.EnvironmentVariables;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.Rule;
 
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.Mockito;
@@ -43,7 +40,6 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-
 public class CreateHandlerTest extends AbstractTestBase {
 
     @Mock
@@ -58,17 +54,8 @@ public class CreateHandlerTest extends AbstractTestBase {
     private CreateHandler handler;
     private final Instant timestamp = Instant.ofEpochSecond(1);
 
-    @Rule
-    private final EnvironmentVariables environmentVariables = new EnvironmentVariables();
-
-    @Before
-    public void initMocks() {
-        MockitoAnnotations.initMocks(this);
-    }
-
     @BeforeEach
     public void setup() {
-        environmentVariables.set("AWS_REGION", "us-west-2");
         proxy = getAmazonWebServicesClientProxy();
         nimbleClient = mock(NimbleClient.class);
         handler = new CreateHandler();

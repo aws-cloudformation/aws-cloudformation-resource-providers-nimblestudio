@@ -23,6 +23,7 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
+                - "ec2:CreateNetworkInterface"
                 - "ec2:CreateNetworkInterfacePermission"
                 - "ec2:DescribeSubnets"
                 - "ec2:RunInstances"

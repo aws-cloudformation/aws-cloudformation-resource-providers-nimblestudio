@@ -13,16 +13,12 @@ import software.amazon.cloudformation.proxy.ProgressEvent;
 import software.amazon.cloudformation.proxy.ProxyClient;
 import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
 
-import org.junit.Before;
-import org.junit.contrib.java.lang.system.EnvironmentVariables;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.Test;
-import org.junit.Rule;
 
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Mock;
 
 import java.time.Instant;
@@ -50,17 +46,8 @@ public class ListHandlerTest extends AbstractTestBase {
 
     private ListHandler handler;
 
-    @Rule
-    private final EnvironmentVariables environmentVariables = new EnvironmentVariables();
-
-    @Before
-    public void initMocks() {
-        MockitoAnnotations.initMocks(this);
-    }
-
     @BeforeEach
     public void setup() {
-        environmentVariables.set("AWS_REGION", "us-west-2");
         proxy = getAmazonWebServicesClientProxy();
         nimbleClient = mock(NimbleClient.class);
         handler = new ListHandler();
