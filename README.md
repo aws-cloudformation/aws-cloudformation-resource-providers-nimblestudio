@@ -8,14 +8,7 @@ See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more inform
 
 ## Setting up pre-commit hooks
 
-This repository checks code formatting and runs the test suite for all code changes. You can run formatting checks locally as a pre-commit hook to fix minor formatting issues and to find problems before submitting your pull request. To set up pre-commit hooks, run the follow commands in your local repository:
-
-```
-python3 -m venv env
-source env/bin/activate
-pip3 install pre-commit
-pre-commit install
-```
+This repository checks code formatting and runs the test suite for all code changes. You can run formatting checks locally as a pre-commit hook to fix minor formatting issues and to find problems before submitting your pull request. Follow the [pre-commit installation instructions](https://pre-commit.com/) to install the package.
 
 ## License
 
