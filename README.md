@@ -1,11 +1,6 @@
-## My Project
+## AWS Cloudformation Resource Providers for NimbleStudio
 
-TODO: Fill this README out!
-
-Be sure to:
-
-* Change the title in this README
-* Edit your repository description on GitHub
+The CloudFormation Resource Provider Package for NimbleStudio.
 
 ## Security
 
