@@ -44,3 +44,9 @@ build
 .settings/
 
 .DS_Store
+
+.gradle
+buildSrc
+gradle
+gradlew
+gradlew.bat
