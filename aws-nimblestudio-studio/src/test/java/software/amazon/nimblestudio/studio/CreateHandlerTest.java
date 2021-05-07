@@ -201,22 +201,7 @@ public class CreateHandlerTest extends AbstractTestBase {
         assertThat(response.getErrorCode()).isNull();
     }
 
-//    @Test
-//    public void handleRequest_CreateSuccess_BlankEncruption() {
-//        Mockito.when(proxyClient.injectCredentialsAndInvokeV2(any(GetStudioRequest.class), any()))
-//            .thenReturn(Utils.generateReadStudioCreatingResult()).thenReturn(Utils.generateReadStudioCreatingResult())
-//            .thenReturn(Utils.generateReadStudioReadyResult());
-//
-//        Mockito.doReturn(generateCreateStudioResult()).when(proxyClient)
-//            .injectCredentialsAndInvokeV2(any(CreateStudioRequest.class), any());
-//
-//        final ProgressEvent<ResourceModel, CallbackContext> response = handler
-//            .handleRequest(proxy, generateCreateHandlerRequest(), new CallbackContext(), proxyClient, logger);
-//
-//        assertThat(response.getResourceModel().studioEncryptionConfiguration()).isEqualTo(null);
-//    }
-
-        @ParameterizedTest
+    @ParameterizedTest
     @MethodSource("testParamsForException")
     public void handleRequest_Failed_Exception(final Class<Throwable> thrownException,
                                                final Class<Throwable> expectedException) {

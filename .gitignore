@@ -44,3 +44,13 @@ build
 .settings/
 
 .DS_Store
+
+# Gradle generate files
+.gradle
+buildSrc
+gradle
+gradlew
+gradlew.bat
+
+# Python virtualenv for pre-commit hooks
+env
