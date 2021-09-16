@@ -13,11 +13,11 @@ Resources:
     Properties:
       Handler: software.amazon.nimblestudio.streamingimage.HandlerWrapper::handleRequest
       Runtime: java8
-      CodeUri: ./target/aws-nimblestudio-streamingimage-1.0.jar
+      CodeUri: ./target/aws-nimblestudio-streamingimage-handler-1.0-SNAPSHOT.jar
 
   TestEntrypoint:
     Type: AWS::Serverless::Function
     Properties:
       Handler: software.amazon.nimblestudio.streamingimage.HandlerWrapper::testEntrypoint
       Runtime: java8
-      CodeUri: ./target/aws-nimblestudio-streamingimage-1.0.jar
+      CodeUri: ./target/aws-nimblestudio-streamingimage-handler-1.0-SNAPSHOT.jar
