@@ -6,6 +6,7 @@ import software.amazon.cloudformation.proxy.Logger;
 import software.amazon.cloudformation.proxy.ProgressEvent;
 import software.amazon.cloudformation.proxy.ProxyClient;
 import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
+import software.amazon.nimblestudio.common.ClientBuilder;
 
 public abstract class BaseHandlerStd extends BaseHandler<CallbackContext> {
 
