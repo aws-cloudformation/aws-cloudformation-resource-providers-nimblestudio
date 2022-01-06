@@ -92,7 +92,8 @@ public class CreateHandler extends BaseHandlerStd {
 
                     logger.log(String.format("%s [%s] is in error state %s, creation failed", ResourceModel.TYPE_NAME,
                         streamingImageId, getStreamingImageResponse.streamingImage().state()));
-                    throw new CfnGeneralServiceException(String.format("%s - %s",
+                    throw new CfnGeneralServiceException(String.format("Unexpected state %s: %s - %s",
+                        getStreamingImageResponse.streamingImage().stateAsString(),
                         getStreamingImageResponse.streamingImage().statusCodeAsString(),
                         getStreamingImageResponse.streamingImage().statusMessage()));
                 })

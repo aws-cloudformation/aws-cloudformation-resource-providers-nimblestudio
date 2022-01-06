@@ -114,6 +114,7 @@ public class UpdateHandler extends BaseHandlerStd {
                                 launchProfileId));
                         return true;
                     }
+
                     if (LaunchProfileState.UPDATE_IN_PROGRESS.equals(getLaunchProfileResponse.launchProfile().state())) {
                         logger.log(String.format("%s [%s] is in state UPDATE_IN_PROGRESS, update in progress",
                                 ResourceModel.TYPE_NAME,
@@ -123,7 +124,8 @@ public class UpdateHandler extends BaseHandlerStd {
 
                     logger.log(String.format("%s [%s] is in error state %s, update failed", ResourceModel.TYPE_NAME,
                             launchProfileId, getLaunchProfileResponse.launchProfile().state()));
-                    throw new CfnGeneralServiceException(String.format("%s - %s",
+                    throw new CfnGeneralServiceException(String.format("Unexpected state %s: %s - %s",
+                            getLaunchProfileResponse.launchProfile().stateAsString(),
                             getLaunchProfileResponse.launchProfile().statusCodeAsString(),
                             getLaunchProfileResponse.launchProfile().statusMessage()));
                 })

@@ -1,15 +1,7 @@
 package software.amazon.nimblestudio.launchprofile;
 
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
-import software.amazon.awssdk.services.nimble.model.AccessDeniedException;
-import software.amazon.awssdk.services.nimble.model.ConflictException;
-import software.amazon.awssdk.services.nimble.model.InternalServerErrorException;
-import software.amazon.awssdk.services.nimble.model.ResourceNotFoundException;
-import software.amazon.awssdk.services.nimble.model.ServiceQuotaExceededException;
-import software.amazon.awssdk.services.nimble.model.StreamConfigurationCreate;
-import software.amazon.awssdk.services.nimble.model.StreamingInstanceType;
-import software.amazon.awssdk.services.nimble.model.ThrottlingException;
-import software.amazon.awssdk.services.nimble.model.ValidationException;
+import software.amazon.awssdk.services.nimble.model.*;
 import software.amazon.cloudformation.exceptions.BaseHandlerException;
 import software.amazon.cloudformation.exceptions.CfnAccessDeniedException;
 import software.amazon.cloudformation.exceptions.CfnGeneralServiceException;
@@ -32,11 +24,46 @@ public class Translator {
             streamConfigurationBuilder.maxSessionLengthInMinutes(Double.valueOf(streamConfiguration.maxSessionLengthInMinutes()));
         }
 
+        if (streamConfiguration.maxStoppedSessionLengthInMinutes() != null) {
+            streamConfigurationBuilder.maxStoppedSessionLengthInMinutes(Double.valueOf(streamConfiguration.maxStoppedSessionLengthInMinutes()));
+        }
+
+        if (streamConfiguration.sessionStorage() != null) {
+            streamConfigurationBuilder.sessionStorage(toModelStreamConfigurationSessionStorage(streamConfiguration.sessionStorage()));
+        }
+
         return streamConfigurationBuilder
             .clipboardMode(streamConfiguration.clipboardModeAsString())
             .streamingImageIds(streamConfiguration.streamingImageIds())
             .ec2InstanceTypes(streamConfiguration.ec2InstanceTypesAsStrings())
             .build();
+    }
+
+    static StreamConfigurationSessionStorage toModelStreamConfigurationSessionStorage(
+        final software.amazon.awssdk.services.nimble.model.StreamConfigurationSessionStorage streamConfigurationSessionStorage) {
+        final StreamConfigurationSessionStorage.StreamConfigurationSessionStorageBuilder streamConfigurationSessionStorageBuilder = StreamConfigurationSessionStorage.builder();
+
+        return streamConfigurationSessionStorageBuilder
+            .root(toModelStreamingSessionStorageRoot(streamConfigurationSessionStorage.root()))
+            .mode(streamConfigurationSessionStorage.modeAsStrings())
+            .build();
+    }
+
+    static StreamingSessionStorageRoot toModelStreamingSessionStorageRoot(
+        final software.amazon.awssdk.services.nimble.model.StreamingSessionStorageRoot streamingSessionStorageRoot
+    ){
+
+        final StreamingSessionStorageRoot.StreamingSessionStorageRootBuilder streamingSessionStorageRootBuilder = StreamingSessionStorageRoot.builder();
+
+        if (streamingSessionStorageRoot.linux()!= null) {
+            streamingSessionStorageRootBuilder.linux(streamingSessionStorageRoot.linux());
+        }
+
+        if (streamingSessionStorageRoot.windows()!= null){
+            streamingSessionStorageRootBuilder.windows(streamingSessionStorageRoot.windows());
+        }
+
+        return streamingSessionStorageRootBuilder.build();
     }
 
     static StreamConfigurationCreate fromModelStreamConfiguration(final StreamConfiguration streamConfiguration) {
@@ -54,6 +81,35 @@ public class Translator {
         if (streamConfiguration.getMaxSessionLengthInMinutes() != null) {
             streamConfigurationCreateBuilder.maxSessionLengthInMinutes(
                     streamConfiguration.getMaxSessionLengthInMinutes().intValue());
+        }
+
+        if (streamConfiguration.getMaxStoppedSessionLengthInMinutes() != null) {
+            streamConfigurationCreateBuilder.maxStoppedSessionLengthInMinutes(
+                    streamConfiguration.getMaxStoppedSessionLengthInMinutes().intValue());
+        }
+
+        if (streamConfiguration.getSessionStorage() != null) {
+            software.amazon.awssdk.services.nimble.model.StreamConfigurationSessionStorage.Builder storageBuilder = software.amazon.awssdk.services.nimble.model.StreamConfigurationSessionStorage.builder();
+            software.amazon.awssdk.services.nimble.model.StreamingSessionStorageRoot.Builder storageRootBuilder = software.amazon.awssdk.services.nimble.model.StreamingSessionStorageRoot.builder();
+            StreamingSessionStorageRoot storageRoot = streamConfiguration.getSessionStorage().getRoot();
+
+            if (storageRoot.getLinux() != null){
+                storageRootBuilder.linux(storageRoot.getLinux());
+            }
+
+            if (storageRoot.getWindows() != null){
+                storageRootBuilder.windows(storageRoot.getWindows());
+            }
+
+            streamConfigurationCreateBuilder.sessionStorage(
+                storageBuilder
+                .mode(
+                    streamConfiguration.getSessionStorage().getMode().stream()
+                    .map(StreamingSessionStorageMode::fromValue)
+                    .collect(Collectors.toList()))
+                .root(storageRootBuilder.build())
+                .build()
+            );
         }
 
         return streamConfigurationCreateBuilder.build();

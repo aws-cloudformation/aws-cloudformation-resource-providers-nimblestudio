@@ -90,8 +90,10 @@ public class CreateHandler extends BaseHandlerStd {
 
                     logger.log(String.format("%s [%s] is in error state %s, creation failed", ResourceModel.TYPE_NAME,
                             studioId, getStudioResponse.studio().state()));
-                    throw new CfnGeneralServiceException(String.format("%s - %s",
-                            getStudioResponse.studio().statusCodeAsString(), getStudioResponse.studio().statusMessage()));
+                    throw new CfnGeneralServiceException(String.format("Unexpected state %s: %s - %s",
+                            getStudioResponse.studio().stateAsString(),
+                            getStudioResponse.studio().statusCodeAsString(),
+                            getStudioResponse.studio().statusMessage()));
                 })
                 .progress())
             .then((r) -> new ReadHandler().handleRequest(proxy, request, callbackContext, proxyClient, logger));
