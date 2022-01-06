@@ -107,7 +107,8 @@ public class DeleteHandler extends BaseHandlerStd {
 
                     logger.log(String.format("%s [%s] is in error state %s, deletion failed", ResourceModel.TYPE_NAME,
                         launchProfileId, getLaunchProfileResponse.launchProfile().state()));
-                    throw new CfnGeneralServiceException(String.format("%s - %s",
+                    throw new CfnGeneralServiceException(String.format("Unexpected state %s: %s - %s",
+                        getLaunchProfileResponse.launchProfile().stateAsString(),
                         getLaunchProfileResponse.launchProfile().statusCodeAsString(),
                         getLaunchProfileResponse.launchProfile().statusMessage()));
                 })

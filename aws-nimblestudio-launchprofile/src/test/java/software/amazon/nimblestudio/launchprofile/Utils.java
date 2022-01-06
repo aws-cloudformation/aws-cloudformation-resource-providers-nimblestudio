@@ -13,6 +13,10 @@ import software.amazon.awssdk.services.nimble.model.ResourceNotFoundException;
 import software.amazon.awssdk.services.nimble.model.ServiceQuotaExceededException;
 import software.amazon.awssdk.services.nimble.model.StreamConfiguration;
 import software.amazon.awssdk.services.nimble.model.StreamingClipboardMode;
+import software.amazon.awssdk.services.nimble.model.StreamConfigurationSessionStorage;
+import software.amazon.awssdk.services.nimble.model.StreamingSessionStorageRoot;
+import software.amazon.awssdk.services.nimble.model.StreamingSessionStorageMode;
+
 import software.amazon.awssdk.services.nimble.model.StreamingInstanceType;
 import software.amazon.awssdk.services.nimble.model.ThrottlingException;
 import software.amazon.awssdk.services.nimble.model.ValidationException;
@@ -24,6 +28,7 @@ import software.amazon.cloudformation.exceptions.CfnServiceInternalErrorExceptio
 import software.amazon.cloudformation.exceptions.CfnServiceLimitExceededException;
 import software.amazon.cloudformation.exceptions.CfnThrottlingException;
 
+import java.util.Arrays;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,7 +51,49 @@ public class Utils {
             .streamingImageIds(Collections.singletonList("imageID"))
             .ec2InstanceTypes(Collections.singletonList(StreamingInstanceType.G4_DN_2_XLARGE))
             .maxSessionLengthInMinutes(1)
+            .maxStoppedSessionLengthInMinutes(2)
+            .sessionStorage(
+                StreamConfigurationSessionStorage
+                .builder()
+                .root(
+                    StreamingSessionStorageRoot.builder().linux("LinuxPath").windows("WindowsPath").build()
+                )
+                .mode(
+                        Collections.singletonList(StreamingSessionStorageMode.UPLOAD)
+                )
+                .build()
+            )
             .build();
+    }
+
+    public static StreamConfiguration generateStreamConfigurationWithoutOptionalParameters() {
+        return StreamConfiguration.builder()
+            .clipboardMode(StreamingClipboardMode.ENABLED)
+            .streamingImageIds(Collections.singletonList("imageID"))
+            .ec2InstanceTypes(Collections.singletonList(StreamingInstanceType.G4_DN_2_XLARGE))
+            .build();
+    }
+
+
+    public static StreamConfiguration generateStreamConfigurationWithoutStorageRoot() {
+        return StreamConfiguration.builder()
+            .clipboardMode(StreamingClipboardMode.ENABLED)
+            .streamingImageIds(Collections.singletonList("imageID"))
+            .ec2InstanceTypes(Collections.singletonList(StreamingInstanceType.G4_DN_2_XLARGE))
+            .maxSessionLengthInMinutes(1)
+            .maxStoppedSessionLengthInMinutes(2)
+            .sessionStorage(
+                StreamConfigurationSessionStorage
+                    .builder()
+                    .mode(
+                        Collections.singletonList(StreamingSessionStorageMode.UPLOAD)
+                    )
+                    .root(
+                        StreamingSessionStorageRoot.builder().build()
+                    )
+                    .build()
+                )
+                .build();
     }
 
     static GetLaunchProfileResponse generateGetLaunchProfileResponse(final LaunchProfileState state) {
@@ -69,22 +116,32 @@ public class Utils {
             .build();
     }
 
-    static List<ResourceModel> generateListLaunchProfilesResponseModel(final String studioId) {
-        return Collections.singletonList(
-            ResourceModel.builder()
+    static ResourceModel.ResourceModelBuilder generateResourceModelBuilder(final String studioId){
+        return ResourceModel.builder()
                 .launchProfileId("launchProfileId")
                 .description("For bob")
                 .name("launchProfileName")
                 .ec2SubnetIds(Collections.singletonList("subnet1"))
-                .streamConfiguration(Translator.toModelStreamConfiguration(generateStreamConfiguration()))
                 .studioComponentIds(Collections.singletonList("studioComponentId"))
                 .launchProfileProtocolVersions(Collections.singletonList("launchProfileProtocolVersion"))
                 .studioId(studioId)
-                .tags(Utils.generateTags())
+                .tags(Utils.generateTags());
+    }
+
+    static List<ResourceModel> generateListLaunchProfilesResponseModel(final String studioId) {
+        return Arrays.asList(
+                generateResourceModelBuilder(studioId)
+                .streamConfiguration(Translator.toModelStreamConfiguration(generateStreamConfigurationWithoutStorageRoot()))
+                .build(),
+                generateResourceModelBuilder(studioId)
+                .streamConfiguration(Translator.toModelStreamConfiguration(generateStreamConfigurationWithoutOptionalParameters()))
+                .build(),
+                generateResourceModelBuilder(studioId)
+                .streamConfiguration(Translator.toModelStreamConfiguration(generateStreamConfiguration()))
                 .build());
     }
 
-    static LaunchProfile generateLaunchProfile(final LaunchProfileState state) {
+    static LaunchProfile.Builder generateLaunchProfileBuilder(final LaunchProfileState state) {
         return LaunchProfile.builder()
             .launchProfileId("launchProfileId")
             .createdAt(Instant.EPOCH)
@@ -95,13 +152,29 @@ public class Utils {
             .statusCode(LaunchProfileStatusCode.LAUNCH_PROFILE_CREATED)
             .statusMessage("Ready!")
             .ec2SubnetIds(Collections.singletonList("subnet1"))
-            .streamConfiguration(generateStreamConfiguration())
             .studioComponentIds(Collections.singletonList("studioComponentId"))
             .launchProfileProtocolVersions(Collections.singletonList("launchProfileProtocolVersion"))
             .updatedAt(Instant.EPOCH)
             .updatedBy("Bob")
-            .tags(Utils.generateTags())
+            .tags(Utils.generateTags());
+    }
+
+    static LaunchProfile generateLaunchProfile(final LaunchProfileState state) {
+        return Utils.generateLaunchProfileBuilder(state)
+            .streamConfiguration(generateStreamConfiguration())
             .build();
+    }
+
+    static LaunchProfile generateLaunchProfileWithoutOptionalParameters(final LaunchProfileState state) {
+        return Utils.generateLaunchProfileBuilder(state)
+            .streamConfiguration(generateStreamConfigurationWithoutOptionalParameters())
+            .build();
+    }
+
+    static LaunchProfile generateLaunchProfileWithoutStorageRoot(final LaunchProfileState state) {
+        return Utils.generateLaunchProfileBuilder(state)
+                .streamConfiguration(generateStreamConfigurationWithoutStorageRoot())
+                .build();
     }
 
     static ListLaunchProfilesResponse generateListLaunchProfilesResponse(final LaunchProfileState state) {

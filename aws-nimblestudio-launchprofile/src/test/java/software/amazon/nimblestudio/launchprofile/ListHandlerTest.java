@@ -59,7 +59,13 @@ public class ListHandlerTest extends AbstractTestBase {
     @Test
     public void handleRequest_SimpleSuccess() {
         // Mock the response
-        Mockito.doReturn(Utils.generateListLaunchProfilesResponse(LaunchProfileState.READY)).when(proxyClient)
+        ListLaunchProfilesResponse listLaunchProfilesResponse = ListLaunchProfilesResponse.builder()
+                .launchProfiles(Arrays.asList(
+                        Utils.generateLaunchProfileWithoutStorageRoot(LaunchProfileState.READY),
+                        Utils.generateLaunchProfileWithoutOptionalParameters(LaunchProfileState.READY),
+                        Utils.generateLaunchProfile(LaunchProfileState.READY)))
+                .build();
+        Mockito.doReturn(listLaunchProfilesResponse).when(proxyClient)
             .injectCredentialsAndInvokeV2(any(ListLaunchProfilesRequest.class), any());
 
         // Mock request

@@ -109,7 +109,8 @@ public class UpdateHandler extends BaseHandlerStd {
 
                     logger.log(String.format("%s [%s] is in error state %s, update failed", ResourceModel.TYPE_NAME,
                         studioComponentId, getStudioComponentResponse.studioComponent().state()));
-                    throw new CfnGeneralServiceException(String.format("%s - %s",
+                    throw new CfnGeneralServiceException(String.format("Unexpected state %s: %s - %s",
+                        getStudioComponentResponse.studioComponent().stateAsString(),
                         getStudioComponentResponse.studioComponent().statusCodeAsString(),
                         getStudioComponentResponse.studioComponent().statusMessage()));
                 })
