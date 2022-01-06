@@ -13,6 +13,10 @@ import software.amazon.awssdk.services.nimble.model.ResourceNotFoundException;
 import software.amazon.awssdk.services.nimble.model.ServiceQuotaExceededException;
 import software.amazon.awssdk.services.nimble.model.StreamConfiguration;
 import software.amazon.awssdk.services.nimble.model.StreamingClipboardMode;
+import software.amazon.awssdk.services.nimble.model.StreamConfigurationSessionStorage;
+import software.amazon.awssdk.services.nimble.model.StreamingSessionStorageRoot;
+import software.amazon.awssdk.services.nimble.model.StreamingSessionStorageMode;
+
 import software.amazon.awssdk.services.nimble.model.StreamingInstanceType;
 import software.amazon.awssdk.services.nimble.model.ThrottlingException;
 import software.amazon.awssdk.services.nimble.model.ValidationException;
@@ -46,6 +50,18 @@ public class Utils {
             .streamingImageIds(Collections.singletonList("imageID"))
             .ec2InstanceTypes(Collections.singletonList(StreamingInstanceType.G4_DN_2_XLARGE))
             .maxSessionLengthInMinutes(1)
+            .maxStoppedSessionLengthInMinutes(2)
+            .sessionStorage(
+                StreamConfigurationSessionStorage
+                .builder()
+                .root(
+                    StreamingSessionStorageRoot.builder().linux("LinuxPath").windows("WindowsPath").build()
+                )
+                .mode(
+                        Collections.singletonList(StreamingSessionStorageMode.UPLOAD)
+                )
+                .build()
+            )
             .build();
     }
 
