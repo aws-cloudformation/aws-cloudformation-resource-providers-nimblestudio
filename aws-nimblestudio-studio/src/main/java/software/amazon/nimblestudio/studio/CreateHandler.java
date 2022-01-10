@@ -92,7 +92,7 @@ public class CreateHandler extends BaseHandlerStd {
                             studioId, getStudioResponse.studio().state()));
                     throw new CfnGeneralServiceException(String.format("Unexpected state %s: %s - %s",
                             getStudioResponse.studio().stateAsString(),
-                            getStudioResponse.studio().statusCodeAsString(), 
+                            getStudioResponse.studio().statusCodeAsString(),
                             getStudioResponse.studio().statusMessage()));
                 })
                 .progress())

@@ -90,7 +90,7 @@ public class DeleteHandler extends BaseHandlerStd {
 
                     throw new CfnGeneralServiceException(String.format("Unexpected state %s: %s - %s",
                             studio.stateAsString(),
-                            studio.statusCodeAsString(), 
+                            studio.statusCodeAsString(),
                             studio.statusMessage()));
                 })
                 .done(awsResponse ->
