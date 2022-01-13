@@ -7,13 +7,13 @@
     <parent>
         <groupId>software.amazon.nimblestudio</groupId>
         <artifactId>aws-nimblestudio-cloudformation</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
 
     <groupId>software.amazon.nimblestudio.common</groupId>
     <artifactId>aws-nimblestudio-common</artifactId>
     <name>aws-nimblestudio-common</name>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <build>

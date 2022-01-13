@@ -5,6 +5,7 @@ import software.amazon.awssdk.services.nimble.model.DeleteStudioRequest;
 import software.amazon.awssdk.services.nimble.model.DeleteStudioResponse;
 import software.amazon.awssdk.services.nimble.model.GetStudioRequest;
 import software.amazon.awssdk.services.nimble.model.GetStudioResponse;
+import software.amazon.awssdk.services.nimble.model.Studio;
 import software.amazon.awssdk.services.nimble.model.StudioState;
 import software.amazon.awssdk.services.nimble.model.NimbleException;
 import software.amazon.cloudformation.exceptions.CfnGeneralServiceException;
@@ -43,7 +44,8 @@ public class DeleteHandler extends BaseHandlerStd {
                     .build())
                 .makeServiceCall((awsRequest, client) -> {
                     final String studioId = awsRequest.studioId();
-                    final StudioState studioState = getStudioState(studioId, client);
+                    final Studio studio = GetStudio(studioId, client);
+                    final StudioState studioState = studio.state();
 
                     // If the studio is already DELETING, don't send another DELETE request (which will fail)
                     if(StudioState.DELETE_IN_PROGRESS.equals(studioState)) {
@@ -69,7 +71,8 @@ public class DeleteHandler extends BaseHandlerStd {
                 })
                 .stabilize((awsRequest, awsResponse, client, model, context) -> {
                     final String studioId = awsRequest.studioId();
-                    final StudioState studioState = getStudioState(studioId, client);
+                    final Studio studio = GetStudio(studioId, client);
+                    final StudioState studioState = studio.state();
 
                     if (StudioState.DELETED.equals(studioState) || StudioState.CREATE_FAILED.equals(studioState)) {
                         logger.log(String.format("%s [%s] is in state %s, deletion succeeded",
@@ -82,20 +85,24 @@ public class DeleteHandler extends BaseHandlerStd {
                         return false;
                     }
 
-                    throw new CfnGeneralServiceException(String.format("%s [%s] is in unexpected state %s, deletion failed",
-                        ResourceModel.TYPE_NAME, studioId, studioState));
+                    logger.log(String.format("%s [%s] is in unexpected state %s, deletion failed",
+	                    ResourceModel.TYPE_NAME, studioId, studioState));
 
+                    throw new CfnGeneralServiceException(String.format("Unexpected state %s: %s - %s",
+                            studio.stateAsString(),
+                            studio.statusCodeAsString(),
+                            studio.statusMessage()));
                 })
                 .done(awsResponse ->
                     ProgressEvent.<ResourceModel, CallbackContext>builder().status(OperationStatus.SUCCESS).build()));
     }
 
-    private StudioState getStudioState(final String studioId, final ProxyClient<NimbleClient> proxyClient) {
+    private Studio GetStudio(final String studioId, final ProxyClient<NimbleClient> proxyClient) {
         try {
             GetStudioResponse getStudioResponse = proxyClient.injectCredentialsAndInvokeV2(
                     GetStudioRequest.builder().studioId(studioId).build(),
                     proxyClient.client()::getStudio);
-            return getStudioResponse.studio().state();
+            return getStudioResponse.studio();
         } catch (final NimbleException e) {
             logger.log(String.format("%s [%s] Exception during deletion", ResourceModel.TYPE_NAME, studioId));
             throw Translator.translateToCfnException(e);

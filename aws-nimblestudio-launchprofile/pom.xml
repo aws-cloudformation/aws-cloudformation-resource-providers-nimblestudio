@@ -8,25 +8,25 @@
     <parent>
         <groupId>software.amazon.nimblestudio</groupId>
         <artifactId>aws-nimblestudio-cloudformation</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
 
     <groupId>software.amazon.nimblestudio.launchprofile</groupId>
     <artifactId>aws-nimblestudio-launchprofile-handler</artifactId>
     <name>aws-nimblestudio-launchprofile-handler</name>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
             <groupId>software.amazon.nimblestudio.common</groupId>
             <artifactId>aws-nimblestudio-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>software.amazon.nimblestudio.common</groupId>
             <artifactId>aws-nimblestudio-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0</version>
             <type>test-jar</type>
         </dependency>
         <!-- This would be inherited from the parent pom.xml, but the 'cfn' command line tool -->
