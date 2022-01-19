@@ -1,7 +1,16 @@
 package software.amazon.nimblestudio.launchprofile;
 
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
-import software.amazon.awssdk.services.nimble.model.*;
+import software.amazon.awssdk.services.nimble.model.AccessDeniedException;
+import software.amazon.awssdk.services.nimble.model.ConflictException;
+import software.amazon.awssdk.services.nimble.model.InternalServerErrorException;
+import software.amazon.awssdk.services.nimble.model.ResourceNotFoundException;
+import software.amazon.awssdk.services.nimble.model.ServiceQuotaExceededException;
+import software.amazon.awssdk.services.nimble.model.StreamConfigurationCreate;
+import software.amazon.awssdk.services.nimble.model.StreamingInstanceType;
+import software.amazon.awssdk.services.nimble.model.StreamingSessionStorageMode;
+import software.amazon.awssdk.services.nimble.model.ThrottlingException;
+import software.amazon.awssdk.services.nimble.model.ValidationException;
 import software.amazon.cloudformation.exceptions.BaseHandlerException;
 import software.amazon.cloudformation.exceptions.CfnAccessDeniedException;
 import software.amazon.cloudformation.exceptions.CfnGeneralServiceException;
