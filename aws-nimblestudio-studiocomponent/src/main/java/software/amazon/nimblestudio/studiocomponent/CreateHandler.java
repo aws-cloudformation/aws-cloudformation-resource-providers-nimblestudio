@@ -206,6 +206,14 @@ public class CreateHandler extends BaseHandlerStd {
             createStudioComponentRequestBuilder.subtype(model.getSubtype());
         }
 
+        if (!StringUtils.isEmpty(model.getRuntimeRoleArn())) {
+            createStudioComponentRequestBuilder.runtimeRoleArn(model.getRuntimeRoleArn());
+        }
+
+        if (!StringUtils.isEmpty(model.getSecureInitializationRoleArn())) {
+            createStudioComponentRequestBuilder.secureInitializationRoleArn(model.getSecureInitializationRoleArn());
+        }
+
         if (hasConfiguration) {
             createStudioComponentRequestBuilder.configuration(studioComponentConfigurationBuilder.build());
         }

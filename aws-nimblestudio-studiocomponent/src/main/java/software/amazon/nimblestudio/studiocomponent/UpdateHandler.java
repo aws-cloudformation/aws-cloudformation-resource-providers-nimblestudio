@@ -222,6 +222,14 @@ public class UpdateHandler extends BaseHandlerStd {
             updateStudioComponentRequestBuilder.subtype(model.getSubtype());
         }
 
+        if (!StringUtils.isEmpty(model.getRuntimeRoleArn())) {
+            updateStudioComponentRequestBuilder.runtimeRoleArn(model.getRuntimeRoleArn());
+        }
+
+        if (!StringUtils.isEmpty(model.getSecureInitializationRoleArn())) {
+            updateStudioComponentRequestBuilder.secureInitializationRoleArn(model.getSecureInitializationRoleArn());
+        }
+
         updateStudioComponentRequestBuilder.configuration(studioComponentConfigurationBuilder.build());
 
         return updateStudioComponentRequestBuilder.build();

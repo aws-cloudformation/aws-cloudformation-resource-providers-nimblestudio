@@ -114,6 +114,8 @@ public class CreateHandlerTest extends AbstractTestBase {
                 .tags(Utils.generateTags())
                 .updatedAt(timestamp)
                 .updatedBy("Pixel")
+                .runtimeRoleArn("SampleRuntimeRoleArn")
+                .secureInitializationRoleArn("SampleSecureInitializationRoleArn")
                 .build())
             .build();
     }
@@ -173,6 +175,8 @@ public class CreateHandlerTest extends AbstractTestBase {
             .subtype(StudioComponentSubtype.AMAZON_FSX_FOR_WINDOWS.toString())
             .type(StudioComponentType.SHARED_FILE_SYSTEM.toString())
             .tags(Utils.generateTags())
+            .runtimeRoleArn("SampleRuntimeRoleArn")
+            .secureInitializationRoleArn("SampleSecureInitializationRoleArn")
             .build();
         return ResourceHandlerRequest.<ResourceModel>builder().desiredResourceState(model).clientRequestToken("clientToken").build();
     }
@@ -231,6 +235,8 @@ public class CreateHandlerTest extends AbstractTestBase {
             .ec2SecurityGroupIds(new ArrayList<>())
             .studioComponentId("studioComponentId")
             .subtype(StudioComponentSubtype.AMAZON_FSX_FOR_WINDOWS.toString())
+            .runtimeRoleArn("SampleRuntimeRoleArn")
+            .secureInitializationRoleArn("SampleSecureInitializationRoleArn")
             .type(StudioComponentType.COMPUTE_FARM.toString())
             .tags(Utils.generateTags())
             .studioId("id")
