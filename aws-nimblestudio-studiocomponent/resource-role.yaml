@@ -28,6 +28,7 @@ Resources:
                 - "ds:UnauthorizeApplication"
                 - "ec2:DescribeSecurityGroups"
                 - "fsx:DescribeFilesystems"
+                - "iam:PassRole"
                 - "nimble:CreateStudioComponent"
                 - "nimble:DeleteStudioComponent"
                 - "nimble:GetStudioComponent"
