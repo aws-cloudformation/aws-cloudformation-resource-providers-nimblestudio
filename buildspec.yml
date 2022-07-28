@@ -5,11 +5,9 @@ phases:
         java: openjdk8
         python: 3.7
     commands:
-      -  pip install --upgrade 'six==1.15.0'
-      -  pip install --upgrade 'docker~=4.0'
-      -  pip install --upgrade 'aws-sam-translator==1.22.0'
-      -  pip install --upgrade 'pyyaml==5.3.1'
-      -  pip install --upgrade pre-commit cloudformation-cli-java-plugin
+      -  pip install pyyaml --upgrade
+      -  pip install --upgrade 'six==1.16.0'
+      -  pip install pre-commit cloudformation-cli-java-plugin
   build:
     commands:
       - pre-commit run --all-files
