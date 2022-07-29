@@ -133,23 +133,61 @@
       "additionalProperties": false
     },
     "StudioComponentConfiguration": {
-      "type": "object",
       "description": "<p>The configuration of the studio component, based on component type.</p>",
-      "properties": {
-        "LicenseServiceConfiguration": {
-          "$ref": "#/definitions/LicenseServiceConfiguration"
+      "oneOf": [
+        {
+          "type": "object",
+          "title": "ActiveDirectoryConfiguration",
+          "properties": {
+            "ActiveDirectoryConfiguration": {
+              "$ref": "#/definitions/ActiveDirectoryConfiguration"
+            }
+          },
+          "required": [
+            "ActiveDirectoryConfiguration"
+          ],
+          "additionalProperties": false
         },
-        "ComputeFarmConfiguration": {
-          "$ref": "#/definitions/ComputeFarmConfiguration"
+        {
+          "type": "object",
+          "title": "ComputeFarmConfiguration",
+          "properties": {
+            "ComputeFarmConfiguration": {
+              "$ref": "#/definitions/ComputeFarmConfiguration"
+            }
+          },
+          "required": [
+            "ComputeFarmConfiguration"
+          ],
+          "additionalProperties": false
         },
-        "ActiveDirectoryConfiguration": {
-          "$ref": "#/definitions/ActiveDirectoryConfiguration"
+        {
+          "type": "object",
+          "title": "LicenseServiceConfiguration",
+          "properties": {
+            "LicenseServiceConfiguration": {
+              "$ref": "#/definitions/LicenseServiceConfiguration"
+            }
+          },
+          "required": [
+            "LicenseServiceConfiguration"
+          ],
+          "additionalProperties": false
         },
-        "SharedFileSystemConfiguration": {
-          "$ref": "#/definitions/SharedFileSystemConfiguration"
+        {
+          "type": "object",
+          "title": "SharedFileSystemConfiguration",
+          "properties": {
+            "SharedFileSystemConfiguration": {
+              "$ref": "#/definitions/SharedFileSystemConfiguration"
+            }
+          },
+          "required": [
+            "SharedFileSystemConfiguration"
+          ],
+          "additionalProperties": false
         }
-      },
-      "additionalProperties": false
+      ]
     },
     "StudioComponentInitializationScript": {
       "type": "object",
