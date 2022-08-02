@@ -87,6 +87,14 @@ public class ReadHandler extends BaseHandlerStd {
                         Translator.toModelStudioComponentInitializationScripts(awsResponse.studioComponent()));
                 }
 
+                if (!StringUtils.isNullOrEmpty(awsResponse.studioComponent().runtimeRoleArn())) {
+                    modelBuilder.runtimeRoleArn(awsResponse.studioComponent().runtimeRoleArn());
+                }
+
+                if (!StringUtils.isNullOrEmpty(awsResponse.studioComponent().secureInitializationRoleArn())) {
+                    modelBuilder.secureInitializationRoleArn(awsResponse.studioComponent().secureInitializationRoleArn());
+                }
+
                 return ProgressEvent.defaultSuccessHandler(modelBuilder.build());
             });
     }
